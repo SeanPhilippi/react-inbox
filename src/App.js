@@ -6,7 +6,7 @@ import lottery from './lottery';
 class App extends PureComponent {
   state = {
     manager: '',
-  }
+  };
 
   async componentDidMount() {
     // from prop where accounts[0] would be specified in call() no longer necessary
@@ -16,16 +16,13 @@ class App extends PureComponent {
   }
 
   render() {
-      return (
-        <div>
-          <h2>Lottery Contract</h2>
-          <p className='manager'>
-            This contract is manged by {this.state.manager}
-          </p>
-        </div>
-      )
+    return (
+      <div>
+        <h2>Lottery Contract</h2>
+        <p className='manager'>This contract is manged by {this.state.manager}</p>
+      </div>
+    );
   }
-
 }
 
 export default App;
