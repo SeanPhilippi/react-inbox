@@ -5,6 +5,7 @@ import lottery from './lottery';
 
 class App extends PureComponent {
   state = {
+    isManager: true,
     manager: '',
     players: [],
     balance: '',
@@ -25,8 +26,6 @@ class App extends PureComponent {
   onSubmit = async e => {
     e.preventDefault();
     const accounts = await web3.eth.getAccounts();
-    console.log('web3', web3);
-    console.log('accounts', accounts);
 
     this.setState({ message: 'Waiting on transaction success...' });
     // for .send(), from key needs to be specified still with the version of web3 being used
@@ -38,8 +37,18 @@ class App extends PureComponent {
     this.setState({ message: 'You have been enetered!' });
   };
 
+  pickWinner = async () => {
+    const accounts = await web3.eth.getAccounts();
+    this.setState({ message: 'Waiting on transaction success...' });
+    await lottery.methods.pickWinner().send({
+      from: accounts[0],
+    });
+    const winner = lottery.methods.winner();
+    this.setState({ message: `Player ${winner} has won the lottery!` });
+  };
+
   render() {
-    const { manager, players, balance, value, message } = this.state;
+    const { manager, players, balance, value, message, isManager } = this.state;
     return (
       <div className='container'>
         <h2>Lottery Contract</h2>
@@ -62,7 +71,14 @@ class App extends PureComponent {
           <br />
           <button>Enter</button>
         </form>
-
+        {isManager && (
+          <>
+            <h2>Time to pick a winner?</h2>
+            <br />
+            <button onClick={this.pickWinner}>Pick Winner</button>
+          </>
+        )}
+        <br />
         <h1>{message}</h1>
       </div>
     );
